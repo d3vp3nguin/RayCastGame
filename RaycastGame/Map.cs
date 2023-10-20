@@ -42,8 +42,8 @@ namespace RaycastGame
                 {
                     mapShapes[y, x] = new RectangleShape(shapeSize);
                     mapShapes[y, x].OutlineThickness = Settings.WallOutlineThickness;
-                    mapShapes[y, x].FillColor = mapBase[y, x] == 1 ? Settings.WallYesFillColor : Settings.WallNoFillColor;
-                    mapShapes[y, x].OutlineColor = mapBase[y, x] == 1 ? Settings.WallYesOutlineColor : Settings.WallNoOutlineColor;
+                    mapShapes[y, x].FillColor = mapBase[y, x] != 0 ? Settings.WallYesFillColor : Settings.WallNoFillColor;
+                    mapShapes[y, x].OutlineColor = mapBase[y, x] != 0 ? Settings.WallYesOutlineColor : Settings.WallNoOutlineColor;
                     mapShapes[y, x].Position = new Vector2f(x * (shapeSize.X + 2 * Settings.WallOutlineThickness) + Settings.WallOutlineThickness, y * (shapeSize.Y + 2 * Settings.WallOutlineThickness) + Settings.WallOutlineThickness) + Settings.MapOffset;
                 }
             }

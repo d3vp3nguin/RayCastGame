@@ -42,7 +42,7 @@ namespace RaycastGame
 
             rayCasting = new RayCasting(player, map);
 
-            objectRenderer = new ObjectRenderer(rayCasting);
+            objectRenderer = new ObjectRenderer(rayCasting, map);
 
             gameDevInfo = new DevInfo();
         }

@@ -7,13 +7,13 @@ namespace RaycastGame
     {
         private List<Vertex[]> rays;
 
+        private float[] projectionHeights;
+        private Color[] projectionColor;
+        private Vector2i[] posMap;
+        private float[] offset;
 
-        private List<float> projectionHeights;
-        public List<float> ProjectionHeights { get { return projectionHeights; } }
-
-
-        private List<Color> projectionColor;
-        public List<Color> ProjectionColor { get { return projectionColor; } }
+        private RayCastResult rayCastRes;
+        public RayCastResult RayCastRes { get { return rayCastRes; } }
 
 
         private Player player;
@@ -23,9 +23,14 @@ namespace RaycastGame
         {
             this.player = player;
             this.map = map;
+
+            projectionHeights = new float[Settings.RaysCount];
+            projectionColor = new Color[Settings.RaysCount];
+            posMap = new Vector2i[Settings.RaysCount];
+            offset = new float[Settings.RaysCount];
+
+            rayCastRes = new RayCastResult();
             rays = new List<Vertex[]>(Settings.RaysCount);
-            projectionHeights = new List<float>(Settings.RaysCount);
-            projectionColor = new List<Color>(Settings.RaysCount);
             for (int i = 0; i < Settings.RaysCount; i++)
             {
                 rays.Add(new Vertex[2]);
@@ -36,29 +41,20 @@ namespace RaycastGame
 
         public void RayCast()
         {
-            projectionHeights.Clear();
-            projectionColor.Clear();
-
             FloatRect rect = map.MapShapes[0, 0].GetGlobalBounds();
-
             float rayAngle = player.Rotation - Settings.FOVHalf;
 
             for (int idxRay = 0; idxRay < Settings.RaysCount; idxRay++)
             {
-                rays[idxRay][0].Position = player.PositionCenter;
-                rays[idxRay][1].Position = player.PositionCenter;
-
                 float sin_angle = (float)Math.Sin(rayAngle);
                 float cos_angle = (float)Math.Cos(rayAngle);
                 float tan_angle = sin_angle / cos_angle;
-                float ctan_angle = cos_angle / sin_angle;
 
                 Vector2i posMapCalc = player.PositionMap;
                 Vector2i posMapCheck1 = new Vector2i(0, 0), posMapCheck2 = new Vector2i(0, 0);
 
-                int depthX = 0, depthY = 0;
-                float dx1 = 0f, dy1 = 0f;
-                float dx2 = 0f, dy2 = 0f;
+                Vector2f dxy1 = new Vector2f();
+                Vector2f dxy2 = new Vector2f();
 
                 bool flagX = true, flagY = true;
                 int modX = cos_angle >= 0 ? 1 : -1;
@@ -66,12 +62,11 @@ namespace RaycastGame
 
                 while (flagX)
                 {
-                    depthX++;
-                    dx1 = cos_angle >= 0f ? (posMapCalc.X + 1) * rect.Width + Settings.DeltaDetection + Settings.MapOffset.X: posMapCalc.X * rect.Width - Settings.DeltaDetection + Settings.MapOffset.X;
-                    dy1 = tan_angle * dx1 + (player.PositionCenter.Y - tan_angle * player.PositionCenter.X);
+                    dxy1.X = cos_angle >= 0f ? (posMapCalc.X + 1) * rect.Width + Settings.DeltaDetection + Settings.MapOffset.X: posMapCalc.X * rect.Width - Settings.DeltaDetection + Settings.MapOffset.X;
+                    dxy1.Y = tan_angle * dxy1.X + (player.PositionCenter.Y - tan_angle * player.PositionCenter.X);
 
-                    posMapCheck1 = new Vector2i((int)Math.Floor((dx1 - Settings.MapOffset.X)/ (rect.Width)),
-                                                (int)Math.Floor((dy1 - Settings.MapOffset.Y) / (rect.Height)));
+                    posMapCheck1 = new Vector2i((int)Math.Floor((dxy1.X - Settings.MapOffset.X)/ (rect.Width)),
+                                                (int)Math.Floor((dxy1.Y - Settings.MapOffset.Y) / (rect.Height)));
 
                     if (posMapCheck1.X < 0 || posMapCheck1.X >= map.MapBase.GetLength(1) ||
                     posMapCheck1.Y < 0 || posMapCheck1.Y >= map.MapBase.GetLength(0)) break;
@@ -83,12 +78,11 @@ namespace RaycastGame
 
                 while (flagY)
                 {
-                    depthY++;
-                    dy2 = sin_angle >= 0f ? (posMapCalc.Y + 1) * rect.Height + Settings.DeltaDetection + Settings.MapOffset.Y : posMapCalc.Y * rect.Height - Settings.DeltaDetection + Settings.MapOffset.Y;
-                    dx2 = (dy2 - (player.PositionCenter.Y - tan_angle * player.PositionCenter.X)) * ctan_angle;
+                    dxy2.Y = sin_angle >= 0f ? (posMapCalc.Y + 1) * rect.Height + Settings.DeltaDetection + Settings.MapOffset.Y : posMapCalc.Y * rect.Height - Settings.DeltaDetection + Settings.MapOffset.Y;
+                    dxy2.X = (dxy2.Y - (player.PositionCenter.Y - tan_angle * player.PositionCenter.X)) / tan_angle;
 
-                    posMapCheck2 = new Vector2i((int)Math.Floor((dx2 - Settings.MapOffset.X) / (rect.Width)),
-                                                (int)Math.Floor((dy2 - Settings.MapOffset.Y) / (rect.Height)));
+                    posMapCheck2 = new Vector2i((int)Math.Floor((dxy2.X - Settings.MapOffset.X) / (rect.Width)),
+                                                (int)Math.Floor((dxy2.Y - Settings.MapOffset.Y) / (rect.Height)));
 
                     if (posMapCheck2.X < 0 || posMapCheck2.X >= map.MapBase.GetLength(1) ||
                     posMapCheck2.Y < 0 || posMapCheck2.Y >= map.MapBase.GetLength(0)) break;
@@ -98,29 +92,39 @@ namespace RaycastGame
                     posMapCalc.Y += modY;
                 }
 
-                float depth = 0f;
-                float dx = 0f, dy = 0f;
-                if (MyMath.Length(new Vector2f(dx1 - player.PositionCenter.X, dy1 - player.PositionCenter.Y)) <=
-                MyMath.Length(new Vector2f(dx2 - player.PositionCenter.X, dy2 - player.PositionCenter.Y)))
+                Vector2f dxy;
+                float depth;
+                float off;
+                float len1 = MyMath.Length(dxy1 - player.PositionCenter);
+                float len2 = MyMath.Length(dxy2 - player.PositionCenter);
+                if (len1 <= len2)
                 {
-                    dx = dx1;
-                    dy = dy1;
+                    dxy = dxy1;
+                    posMap[idxRay] = posMapCheck1;
+                    off = (dxy.Y - Settings.MapOffset.Y) % rect.Height / rect.Height;
+                    offset[idxRay] = cos_angle > 0 ? off : (1 - off);
+                    depth = len1 * (float)Math.Cos(player.Rotation - rayAngle);
                 }
                 else
                 {
-                    dx = dx2;
-                    dy = dy2;
+                    dxy = dxy2;
+                    posMap[idxRay] = posMapCheck2;
+                    off = (dxy.X - Settings.MapOffset.X) % rect.Width / rect.Width;
+                    offset[idxRay] = sin_angle > 0 ? (1 - off) : off;
+                    depth = len2 * (float)Math.Cos(player.Rotation - rayAngle);
                 }
-                depth = MyMath.Length(new Vector2f(dx - player.PositionCenter.X, dy - player.PositionCenter.Y)) * (float)Math.Cos(player.Rotation - rayAngle);
-                rays[idxRay][0].Position = player.PositionCenter + MyMath.Norm(new Vector2f(dx, dy) - player.PositionCenter) * (Settings.PlayerMapRadius + Settings.DopOffsetrayCast);
-                rays[idxRay][1].Position = new Vector2f(dx, dy);
 
-                projectionHeights.Add(Settings.ScreenDistance / (depth / (rect.Width / 2f)));
+                rays[idxRay][0].Position = player.PositionCenter + MyMath.Norm(dxy - player.PositionCenter) * (Settings.PlayerMapRadius + Settings.DopOffsetrayCast);
+                rays[idxRay][1].Position = dxy;
+
+                projectionHeights[idxRay] = Settings.ScreenDistance / (depth / (rect.Width / 2f));
+
                 byte c = (byte)(255 * Math.Pow((Settings.MaxDepth - depth) / Settings.MaxDepth, 1.5));
-                projectionColor.Add(new Color(c, c, c, 255));
+                projectionColor[idxRay] = new Color(c, c, c, 255);
 
                 rayAngle += Settings.DeltaAngle;
             }
+            rayCastRes = new RayCastResult(projectionHeights, projectionColor, posMap, offset);
         }
 
         public void Draw(RenderTarget target, RenderStates states)

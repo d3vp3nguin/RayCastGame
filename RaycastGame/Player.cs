@@ -80,7 +80,7 @@ namespace RaycastGame
             isCollisionDetected = false;
             for (int y = 0; y < map.MapBase.GetLength(0); y++)
                 for (int x = 0; x < map.MapBase.GetLength(1); x++)
-                    if (map.MapBase[y, x] == 1)
+                    if (map.MapBase[y, x] != 0)
                         CheckForWallCollision(map.MapShapes[y, x].GetGlobalBounds());
         }
 
