@@ -45,6 +45,8 @@ namespace RaycastGame
             objectRenderer = new ObjectRenderer(rayCasting, map);
 
             gameDevInfo = new DevInfo();
+
+            gameWindow.SetMouseCursorVisible(false);
         }
 
         private static void MainCycle()
@@ -65,7 +67,7 @@ namespace RaycastGame
                 gameWindow.Draw(player);
                 gameWindow.Draw(rayCasting);
 
-                gameDevInfo.UpdateInfo(fps, player.Position, player.PositionMap, player.Rotation);
+                gameDevInfo.UpdateInfo(fps, player.Position, player.PositionMap, player.Angle);
                 gameWindow.Draw(gameDevInfo);
 
                 gameWindow.Display();

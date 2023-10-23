@@ -51,7 +51,7 @@ namespace RaycastGame
 
 
         // PLAYER SETTINGS
-        private static float playerSpeed = 250f * mapRatio;
+        private static float playerSpeed = 300f * mapRatio;
         public static float PlayerSpeed { get { return playerSpeed; } }
 
 
@@ -75,6 +75,20 @@ namespace RaycastGame
         public static float PlayerMapLineLength { get { return playerMapLineLength; } }
 
 
+        private static float mouseSensativity = 0.3f;
+        public static float MouseSensativity { get { return mouseSensativity; } }
+
+
+        private static float mouseMaxRel = 40f;
+        public static float MouseMaxRel { get { return mouseMaxRel; } }
+
+
+        private static int mouseLeftBorder = 100;
+        private static int mouseRightBorder = gameResolution.X - mouseLeftBorder;
+        public static int MouseLeftBorder { get { return mouseLeftBorder; } }
+        public static int MouseRightBorder { get { return mouseRightBorder; } }
+
+
         // RAYCAST SETTINGS
         private static float fov = (float)Math.PI / 3f;
         private static float fovHalf = fov / 2;
@@ -91,7 +105,7 @@ namespace RaycastGame
         public static float DeltaAngle { get { return deltaAngle; } }
 
 
-        private static int maxDepth = 500;
+        private static int maxDepth = 20;
         public static int MaxDepth { get { return maxDepth; } }
 
 
@@ -100,7 +114,7 @@ namespace RaycastGame
 
 
         private static float dopOffsetrayCast = 3f;
-        public static float DopOffsetrayCast { get { return dopOffsetrayCast; } }
+        public static float DopOffsetRayCast { get { return dopOffsetrayCast; } }
 
 
         private static float screenDistance = (gameResolution.X / 2) / (float)Math.Tan(fovHalf);
@@ -135,12 +149,6 @@ namespace RaycastGame
         public static Keyboard.Key BackwardKey { get { return backwardKey; } }
         public static Keyboard.Key LeftKey { get { return leftKey; } }
         public static Keyboard.Key RightKey { get { return rightKey; } }
-
-
-        private static Keyboard.Key leftRotationKey = Keyboard.Key.Q;
-        private static Keyboard.Key rightRotationKey = Keyboard.Key.E;
-        public static Keyboard.Key LeftRotationKey { get { return leftRotationKey; } }
-        public static Keyboard.Key RightRotationKey { get { return rightRotationKey; } }
 
 
         // DEV INFO SETTINGS

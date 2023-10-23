@@ -18,8 +18,9 @@ namespace RaycastGame
         public Vector2i PositionMap { get { return positionMap; } }
 
 
-        private float rotation;
-        public float Rotation { get { return rotation; } }
+        private float angle;
+        public float Angle { get { return angle; } }
+
 
         private Map map;
 
@@ -27,11 +28,15 @@ namespace RaycastGame
 
         private bool isCollisionDetected = false;
 
+        private int dxMouse;
+
         public Player(Map map)
         {
             position = map.PlayerStartPos + new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius) + Settings.MapOffset;
-            rotation = map.PlayerStartRotation;
+            angle = map.PlayerStartRotation;
             this.map = map;
+
+            dxMouse = Mouse.GetPosition().X;
 
             CalculatePositionMapAndCenter();
 
@@ -55,8 +60,8 @@ namespace RaycastGame
 
         private void MovementAndRotation(float deltaTime)
         {
-            float sin_a = (float)Math.Sin(rotation) * Settings.PlayerSpeed * deltaTime;
-            float cos_a = (float)Math.Cos(rotation) * Settings.PlayerSpeed * deltaTime;
+            float sin_a = (float)Math.Sin(angle);
+            float cos_a = (float)Math.Cos(angle);
 
             Vector2f deltaPos = new Vector2f(0f, 0f);
             if (Keyboard.IsKeyPressed(Settings.ForwardKey)) deltaPos += new Vector2f(cos_a, sin_a);
@@ -64,15 +69,24 @@ namespace RaycastGame
             if (Keyboard.IsKeyPressed(Settings.LeftKey)) deltaPos += new Vector2f(sin_a, -cos_a);
             if (Keyboard.IsKeyPressed(Settings.RightKey)) deltaPos += new Vector2f(-sin_a, cos_a);
             
+            if (MyMath.Length(deltaPos) != 0)
+                deltaPos = MyMath.Norm(deltaPos) * Settings.PlayerSpeed * deltaTime;
+
             position += deltaPos;
             CheckForCollision();
 
             playerMapCircle.Position = position;
 
-            if (Keyboard.IsKeyPressed(Settings.LeftRotationKey)) rotation -= Settings.PlayerRotationSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Settings.RightRotationKey)) rotation += Settings.PlayerRotationSpeed * deltaTime;
+            Vector2i mousePos = Mouse.GetPosition();
+            if (mousePos.X < Settings.MouseLeftBorder || mousePos.X > Settings.MouseRightBorder)
+                Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
+            float rel = mousePos.X - dxMouse;
+            rel = MyMath.Clamp(rel, -Settings.MouseMaxRel, Settings.MouseMaxRel);
+            angle += rel * Settings.MouseSensativity * deltaTime;
+            dxMouse = mousePos.X;
 
-            rotation %= (float)Math.Tau;
+            if (angle < 0) angle += (float)Math.Tau;
+            else if (angle > Math.Tau) angle -= (float)Math.Tau;
         }
 
         private void CheckForCollision()

@@ -13,8 +13,8 @@ namespace RaycastGame
         public Color[] ProjectionColor { get { return projectionColor; } }
 
 
-        private Vector2i[] posMap;
-        public Vector2i[] PosMap { get { return posMap; } }
+        private int[] numTexture;
+        public int[] NumTexture { get { return numTexture; } }
 
 
         private float[] offset;
@@ -25,16 +25,16 @@ namespace RaycastGame
         {
             projectionHeights = new float[Settings.RaysCount];
             projectionColor = new Color[Settings.RaysCount];
-            posMap = new Vector2i[Settings.RaysCount];
+            numTexture = new int[Settings.RaysCount];
             offset = new float[Settings.RaysCount];
         }
 
         public RayCastResult(float[] projectionHeights, Color[] projectionColor,
-                             Vector2i[] posMap, float[] offset)
+                             int[] numTexture, float[] offset)
         {
             this.projectionHeights = projectionHeights;
             this.projectionColor = projectionColor;
-            this.posMap = posMap;
+            this.numTexture = numTexture;
             this.offset = offset;
         }
     }
