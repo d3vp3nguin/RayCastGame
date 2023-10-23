@@ -42,7 +42,7 @@ namespace RaycastGame
         public void RayCast()
         {
             FloatRect rect = map.MapShapes[0, 0].GetGlobalBounds();
-            Vector2f posPlayer = player.PositionCenter - Settings.MapOffset;
+            Vector2f posPlayer = player.Position - Settings.MapOffset;
 
             float rayAngle = player.Angle - Settings.FOVHalf;
             for (int idxRay = 0; idxRay < Settings.RaysCount; idxRay++)
@@ -65,11 +65,11 @@ namespace RaycastGame
                 for (int i = 0; i < Settings.MaxDepth; i++)
                 {
                     Vector2i tileHor = new Vector2i((int)(xHor / rect.Width), (int)(yHor / rect.Height));
-                    if (tileHor.X >= 0 && tileHor.X < map.MapBase.GetLength(1) &&
-                        tileHor.Y >= 0 && tileHor.Y < map.MapBase.GetLength(0))
-                        if (map.MapBase[tileHor.Y, tileHor.X] != 0)
+                    if (tileHor.X >= 0 && tileHor.X < map.MapWallBase.GetLength(1) &&
+                        tileHor.Y >= 0 && tileHor.Y < map.MapWallBase.GetLength(0))
+                        if (map.MapWallBase[tileHor.Y, tileHor.X] != 0)
                         {
-                            textureHor = map.MapBase[tileHor.Y, tileHor.X] - 1;
+                            textureHor = map.MapWallBase[tileHor.Y, tileHor.X] - 1;
                             break;
                         }
                     xHor += dx;
@@ -92,11 +92,11 @@ namespace RaycastGame
                 for (int i = 0; i < Settings.MaxDepth; i++)
                 {
                     Vector2i tileVert = new Vector2i((int)(xVert / rect.Width), (int)(yVert / rect.Height));
-                    if (tileVert.X >= 0 && tileVert.X < map.MapBase.GetLength(1) &&
-                        tileVert.Y >= 0 && tileVert.Y < map.MapBase.GetLength(0))
-                        if (map.MapBase[tileVert.Y, tileVert.X] != 0)
+                    if (tileVert.X >= 0 && tileVert.X < map.MapWallBase.GetLength(1) &&
+                        tileVert.Y >= 0 && tileVert.Y < map.MapWallBase.GetLength(0))
+                        if (map.MapWallBase[tileVert.Y, tileVert.X] != 0)
                         {
-                            textureVert = map.MapBase[tileVert.Y, tileVert.X] - 1;
+                            textureVert = map.MapWallBase[tileVert.Y, tileVert.X] - 1;
                             break;
                         }
                     xVert += dx;
@@ -122,8 +122,8 @@ namespace RaycastGame
                     numTexture[idxRay] = textureHor;
                 }
 
-                rays[idxRay][0].Position = player.PositionCenter + new Vector2f((Settings.PlayerMapRadius + Settings.DopOffsetRayCast) * cos_angle, (Settings.PlayerMapRadius + Settings.DopOffsetRayCast) * sin_angle);
-                rays[idxRay][1].Position = player.PositionCenter + new Vector2f(depth * cos_angle, depth * sin_angle);
+                rays[idxRay][0].Position = player.Position + new Vector2f((Settings.PlayerMapRadius + Settings.DopOffsetRayCast) * cos_angle, (Settings.PlayerMapRadius + Settings.DopOffsetRayCast) * sin_angle);
+                rays[idxRay][1].Position = player.Position + new Vector2f(depth * cos_angle, depth * sin_angle);
 
                 depth *= (float)Math.Cos(player.Angle - rayAngle);
 

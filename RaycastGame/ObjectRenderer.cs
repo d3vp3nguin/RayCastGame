@@ -32,19 +32,9 @@ namespace RaycastGame
             {
                 wallRects[i].FillColor = rayCasting.RayCastRes.ProjectionColor[i];
                 wallRects[i].Texture = wallTextures[rayCasting.RayCastRes.NumTexture[i]];
-                if (rayCasting.RayCastRes.ProjectionHeights[i] < Settings.GameResolution.Y)
-                {
-                    wallRects[i].Position = new Vector2f(i * Settings.WallScale, Settings.GameResolution.Y / 2 - rayCasting.RayCastRes.ProjectionHeights[i] / 2);
-                    wallRects[i].Size = new Vector2f(Settings.WallScale, rayCasting.RayCastRes.ProjectionHeights[i]);
-                    wallRects[i].TextureRect = new IntRect((int)Math.Round(rayCasting.RayCastRes.Offset[i] * (Settings.TextureSize - Settings.WallScale)), 0, (int)Settings.WallScale, Settings.TextureSize);
-                }
-                else
-                {
-                    int textureHeight = (int)(Settings.TextureSize * Settings.GameResolution.Y / rayCasting.RayCastRes.ProjectionHeights[i]);
-                    wallRects[i].Position = new Vector2f(i * Settings.WallScale, 0);
-                    wallRects[i].Size = new Vector2f(Settings.WallScale, Settings.GameResolution.Y);
-                    wallRects[i].TextureRect = new IntRect((int)Math.Round(rayCasting.RayCastRes.Offset[i] * (Settings.TextureSize - Settings.WallScale)), Settings.TextureSize / 2 - textureHeight / 2, (int)Settings.WallScale, textureHeight);
-                }
+                wallRects[i].Position = new Vector2f(i * Settings.WallScale, Settings.GameResolution.Y / 2 - rayCasting.RayCastRes.ProjectionHeights[i] / 2);
+                wallRects[i].Size = new Vector2f(Settings.WallScale, rayCasting.RayCastRes.ProjectionHeights[i]);
+                wallRects[i].TextureRect = new IntRect((int)Math.Round(rayCasting.RayCastRes.Offset[i] * (Settings.TextureSize - Settings.WallScale)), 0, (int)Settings.WallScale, Settings.TextureSize);
             }
         }
 

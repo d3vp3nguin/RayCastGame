@@ -79,7 +79,7 @@ namespace RaycastGame
         public static float MouseSensativity { get { return mouseSensativity; } }
 
 
-        private static float mouseMaxRel = 40f;
+        private static float mouseMaxRel = 80f;
         public static float MouseMaxRel { get { return mouseMaxRel; } }
 
 

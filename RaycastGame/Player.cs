@@ -10,10 +10,6 @@ namespace RaycastGame
         public Vector2f Position { get { return position; } }
 
 
-        private Vector2f positionCenter;
-        public Vector2f PositionCenter { get { return positionCenter; } }
-
-
         private Vector2i positionMap;
         public Vector2i PositionMap { get { return positionMap; } }
 
@@ -23,6 +19,7 @@ namespace RaycastGame
 
 
         private Map map;
+        private FloatRect rect;
 
         private CircleShape playerMapCircle;
 
@@ -32,8 +29,9 @@ namespace RaycastGame
 
         public Player(Map map)
         {
-            position = map.PlayerStartPos + new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius) + Settings.MapOffset;
+            position = map.PlayerStartPos;
             angle = map.PlayerStartRotation;
+            rect = map.MapShapes[0, 0].GetGlobalBounds();
             this.map = map;
 
             dxMouse = Mouse.GetPosition().X;
@@ -42,6 +40,7 @@ namespace RaycastGame
 
             playerMapCircle = new CircleShape(Settings.PlayerMapRadius);
             playerMapCircle.FillColor = Settings.PlayerMapColor;
+            playerMapCircle.Origin = new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius);
         }
 
         public void Update(float deltaTime)
@@ -52,10 +51,8 @@ namespace RaycastGame
 
         private void CalculatePositionMapAndCenter()
         {
-            FloatRect rect = map.MapShapes[0, 0].GetGlobalBounds();
-            positionMap = new Vector2i((int)Math.Floor((position.X + Settings.PlayerMapRadius - Settings.MapOffset.X) / rect.Width), 
-                                       (int)Math.Floor((position.Y + Settings.PlayerMapRadius - Settings.MapOffset.Y) / rect.Height));
-            positionCenter = position + new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius);
+            positionMap = new Vector2i((int)Math.Floor((position.X - Settings.MapOffset.X) / rect.Width), 
+                                       (int)Math.Floor((position.Y - Settings.MapOffset.Y) / rect.Height));
         }
 
         private void MovementAndRotation(float deltaTime)
@@ -79,35 +76,36 @@ namespace RaycastGame
 
             Vector2i mousePos = Mouse.GetPosition();
             if (mousePos.X < Settings.MouseLeftBorder || mousePos.X > Settings.MouseRightBorder)
+            {
+                dxMouse += Settings.GameResolution.X / 2 - mousePos.X;
                 Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
-            float rel = mousePos.X - dxMouse;
-            rel = MyMath.Clamp(rel, -Settings.MouseMaxRel, Settings.MouseMaxRel);
+                mousePos = new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2);
+            }
+            float rel = MyMath.Clamp(mousePos.X - dxMouse, -Settings.MouseMaxRel, Settings.MouseMaxRel);
             angle += rel * Settings.MouseSensativity * deltaTime;
             dxMouse = mousePos.X;
 
-            if (angle < 0) angle += (float)Math.Tau;
-            else if (angle > Math.Tau) angle -= (float)Math.Tau;
+            if (angle <= 0) angle += (float)Math.Tau;
+            if (angle >= Math.Tau) angle -= (float)Math.Tau;
         }
 
         private void CheckForCollision()
         {
             isCollisionDetected = false;
-            for (int y = 0; y < map.MapBase.GetLength(0); y++)
-                for (int x = 0; x < map.MapBase.GetLength(1); x++)
-                    if (map.MapBase[y, x] != 0)
+            for (int y = 0; y < map.MapWallBase.GetLength(0); y++)
+                for (int x = 0; x < map.MapWallBase.GetLength(1); x++)
+                    if (map.MapWallBase[y, x] != 0)
                         CheckForWallCollision(map.MapShapes[y, x].GetGlobalBounds());
         }
 
         private void CheckForWallCollision(FloatRect rect)
         {
-            Vector2f posPlayer = position + new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius);
+            Vector2f nearWallPoint = new Vector2f(MyMath.Clamp(position.X, rect.Left - Settings.WallOutlineThickness, rect.Left + rect.Width + Settings.WallOutlineThickness), 
+                                                  MyMath.Clamp(position.Y, rect.Top - Settings.WallOutlineThickness, rect.Top + rect.Height + Settings.WallOutlineThickness));
 
-            Vector2f nearWallPoint = new Vector2f(MyMath.Clamp(posPlayer.X, rect.Left - Settings.WallOutlineThickness, rect.Left + rect.Width + Settings.WallOutlineThickness), 
-                                                  MyMath.Clamp(posPlayer.Y, rect.Top - Settings.WallOutlineThickness, rect.Top + rect.Height + Settings.WallOutlineThickness));
-
-            Vector2f playerToPoint = posPlayer - nearWallPoint;
+            Vector2f playerToPoint = position - nearWallPoint;
             if (MyMath.Length(playerToPoint) < Settings.PlayerMapRadius)
-                position = nearWallPoint + MyMath.Norm(playerToPoint) * Settings.PlayerMapRadius - new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius);
+                position = nearWallPoint + MyMath.Norm(playerToPoint) * Settings.PlayerMapRadius;
 
             isCollisionDetected = true;
         }
