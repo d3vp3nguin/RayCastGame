@@ -79,16 +79,6 @@ namespace RaycastGame
         public static float MouseSensativity { get { return mouseSensativity; } }
 
 
-        private static float mouseMaxRel = 80f;
-        public static float MouseMaxRel { get { return mouseMaxRel; } }
-
-
-        private static int mouseLeftBorder = 100;
-        private static int mouseRightBorder = gameResolution.X - mouseLeftBorder;
-        public static int MouseLeftBorder { get { return mouseLeftBorder; } }
-        public static int MouseRightBorder { get { return mouseRightBorder; } }
-
-
         // RAYCAST SETTINGS
         private static float fov = (float)Math.PI / 3f;
         private static float fovHalf = fov / 2;
@@ -126,18 +116,40 @@ namespace RaycastGame
 
 
         // TEXTURING SETTINGS
-        private static int textureSize = 512;
-        private static int textureSizeHalf = textureSize / 2;
-        public static int TextureSize { get { return textureSize; } }
-        public static int TextureSizeHalf { get { return textureSizeHalf; } }
+        private static Vector2i textureWallSize = new Vector2i(512, 512);
+        private static Vector2i textureWallSizeHalf = textureWallSize / 2;
+        public static Vector2i TextureWallSize { get { return textureWallSize; } }
+        public static Vector2i TextureWallSizeHalf { get { return textureWallSizeHalf; } }
 
 
-        private static string texturePath = "Assets\\Textures\\";
-        public static string TexturePath { get { return texturePath; } }
+        private static Vector2i textureSkySize = new Vector2i(2048, 512);
+        public static Vector2i TextureSkySize { get { return textureSkySize; } }
+
+
+        private static string textureWallPath = "Assets\\Textures\\Walls\\Wall";
+        public static string TextureWallPath { get { return textureWallPath; } }
+
+
+        private static string textureSkyPath = "Assets\\Textures\\Sky\\Sky.png";
+        public static string TextureSkyPath { get { return textureSkyPath; } }
 
 
         private static int wallTextureNumber = 3;
         public static int WallTextureNumber { get { return wallTextureNumber; } }
+
+
+        private static Color floorBrightColor = new Color(33, 33, 33, 255);
+        private static Color floorDarkColor = new Color(3, 3, 3, 255);
+        public static Color FloorBrightColor { get { return floorBrightColor; } }
+        public static Color FloorDarkColor { get { return floorDarkColor; } }
+
+
+        private static string textureProbPath = "Assets\\Sprites\\Probs";
+        public static string TextureProbPath { get { return textureProbPath; } }
+
+
+        private static float probeScale = 500f;
+        public static float ProbeScale { get { return probeScale; } }
 
 
         // INPUT KEYS SETTINGS

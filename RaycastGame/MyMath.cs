@@ -8,6 +8,7 @@ namespace RaycastGame
         public static float Clamp(float value, float min, float max) { return Math.Max(Math.Min(value, max), min); }
         public static float Length(Vector2f v) { return (float)Math.Sqrt(v.X * v.X + v.Y * v.Y); }
         public static float Length(Vector3f v) { return (float)Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z); }
+        public static float Hypot(float x, float y) { return (float)Math.Sqrt(x * x + y * y); }
         public static Vector2f Norm(Vector2f v) { return v / Length(v); }
         public static Vector3f Norm(Vector3f v) { return v / Length(v); }
         public static float Dot(Vector2f v1, Vector2f v2) { return v1.X * v2.X + v1.Y * v2.Y; }

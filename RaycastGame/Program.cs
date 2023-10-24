@@ -42,11 +42,12 @@ namespace RaycastGame
 
             rayCasting = new RayCasting(player, map);
 
-            objectRenderer = new ObjectRenderer(rayCasting, map);
+            objectRenderer = new ObjectRenderer(player, rayCasting, map);
 
             gameDevInfo = new DevInfo();
 
             gameWindow.SetMouseCursorVisible(false);
+            Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
         }
 
         private static void MainCycle()
@@ -58,9 +59,12 @@ namespace RaycastGame
                 gameWindow.DispatchEvents();
                 gameWindow.Clear(Color.Black);
 
-                player.Update(deltaTime);
-                rayCasting.RayCast();
-                objectRenderer.Update();
+                if (gameWindow.HasFocus())
+                {
+                    player.Update(deltaTime);
+                    rayCasting.RayCast();
+                    objectRenderer.Update();
+                }
 
                 gameWindow.Draw(objectRenderer);
                 gameWindow.Draw(map);

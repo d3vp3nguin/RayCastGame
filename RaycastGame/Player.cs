@@ -25,16 +25,12 @@ namespace RaycastGame
 
         private bool isCollisionDetected = false;
 
-        private int dxMouse;
-
         public Player(Map map)
         {
             position = map.PlayerStartPos;
             angle = map.PlayerStartRotation;
             rect = map.MapShapes[0, 0].GetGlobalBounds();
             this.map = map;
-
-            dxMouse = Mouse.GetPosition().X;
 
             CalculatePositionMapAndCenter();
 
@@ -74,19 +70,12 @@ namespace RaycastGame
 
             playerMapCircle.Position = position;
 
-            Vector2i mousePos = Mouse.GetPosition();
-            if (mousePos.X < Settings.MouseLeftBorder || mousePos.X > Settings.MouseRightBorder)
-            {
-                dxMouse += Settings.GameResolution.X / 2 - mousePos.X;
-                Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
-                mousePos = new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2);
-            }
-            float rel = MyMath.Clamp(mousePos.X - dxMouse, -Settings.MouseMaxRel, Settings.MouseMaxRel);
-            angle += rel * Settings.MouseSensativity * deltaTime;
-            dxMouse = mousePos.X;
+            float dx = Mouse.GetPosition().X - Settings.GameResolution.X / 2;
+            Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
+            angle += dx * Settings.MouseSensativity * deltaTime;
 
-            if (angle <= 0) angle += (float)Math.Tau;
-            if (angle >= Math.Tau) angle -= (float)Math.Tau;
+            if (angle < 0) angle += (float)Math.Tau;
+            if (angle > Math.Tau) angle -= (float)Math.Tau;
         }
 
         private void CheckForCollision()

@@ -11,6 +11,7 @@ namespace RaycastGame
         private Color[] projectionColor;
         private int[] numTexture;
         private float[] offset;
+        private float[] depth;
 
         private RayCastResult rayCastRes;
         public RayCastResult RayCastRes { get { return rayCastRes; } }
@@ -28,6 +29,7 @@ namespace RaycastGame
             projectionColor = new Color[Settings.RaysCount];
             numTexture = new int[Settings.RaysCount];
             offset = new float[Settings.RaysCount];
+            depth = new float[Settings.RaysCount];
 
             rayCastRes = new RayCastResult();
             rays = new List<Vertex[]>(Settings.RaysCount);
@@ -106,34 +108,33 @@ namespace RaycastGame
 
                 // COMPARISON
 
-                float depth;
                 if (depthVert < depthHor)
                 {
-                    depth = depthVert;
+                    depth[idxRay] = depthVert;
                     yVert = yVert % rect.Height / rect.Height;
                     offset[idxRay] = cos_angle > 0 ? yVert : (1 - yVert);
                     numTexture[idxRay] = textureVert;
                 }
                 else
                 {
-                    depth = depthHor;
+                    depth[idxRay] = depthHor;
                     xHor = xHor % rect.Width / rect.Width;
                     offset[idxRay] = sin_angle > 0 ? (1 - xHor) : xHor;
                     numTexture[idxRay] = textureHor;
                 }
 
                 rays[idxRay][0].Position = player.Position + new Vector2f((Settings.PlayerMapRadius + Settings.DopOffsetRayCast) * cos_angle, (Settings.PlayerMapRadius + Settings.DopOffsetRayCast) * sin_angle);
-                rays[idxRay][1].Position = player.Position + new Vector2f(depth * cos_angle, depth * sin_angle);
+                rays[idxRay][1].Position = player.Position + new Vector2f(depth[idxRay] * cos_angle, depth[idxRay] * sin_angle);
 
-                depth *= (float)Math.Cos(player.Angle - rayAngle);
+                depth[idxRay] *= (float)Math.Cos(player.Angle - rayAngle);
 
-                projectionHeights[idxRay] = Settings.ScreenDistance / (depth / rect.Width + Settings.DeltaDetection);
-                byte c = (byte)(255 * Math.Pow((Settings.MaxDepth * rect.Width - depth) / (Settings.MaxDepth * rect.Width), 1.5));
+                projectionHeights[idxRay] = Settings.ScreenDistance / (depth[idxRay] / rect.Width + Settings.DeltaDetection);
+                byte c = (byte)(255 * Math.Pow((Settings.MaxDepth * rect.Width - depth[idxRay]) / (Settings.MaxDepth * rect.Width), 1.5));
                 projectionColor[idxRay] = new Color(c, c, c, 255);
 
                 rayAngle += Settings.DeltaAngle;
             }
-            rayCastRes = new RayCastResult(projectionHeights, projectionColor, numTexture, offset);
+            rayCastRes = new RayCastResult(projectionHeights, projectionColor, numTexture, offset, depth);
         }
 
         public void Draw(RenderTarget target, RenderStates states)
