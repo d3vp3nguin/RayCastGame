@@ -13,40 +13,40 @@ namespace RaycastGame
         public DevInfo()
         {
             textFPS = new Text();
-            textFPS.Scale = new Vector2f(Settings.DevTextScale, Settings.DevTextScale);
-            textFPS.FillColor = Settings.DevTextFillColor;
-            textFPS.OutlineColor = Settings.DevTextOutlineColor;
-            textFPS.OutlineThickness = Settings.DevTextThickness;
-            textFPS.CharacterSize = Settings.DevTextCharacterSize;
-            textFPS.Position = new Vector2f(Settings.DevTextFPSX, Settings.DevTextFPSY);
-            textFPS.Font = new Font(Settings.DevTextFontPath);
+            textFPS.Scale = new Vector2f(Config.DevTextScale, Config.DevTextScale);
+            textFPS.FillColor = Config.DevTextFillColor;
+            textFPS.OutlineColor = Config.DevTextOutlineColor;
+            textFPS.OutlineThickness = Config.DevTextThickness;
+            textFPS.CharacterSize = Config.DevTextCharacterSize;
+            textFPS.Position = new Vector2f(Config.DevTextFPSX, Config.DevTextFPSY);
+            textFPS.Font = new Font(Config.DevTextFontPath);
 
             textPlayerPosition = new Text();
-            textPlayerPosition.Scale = new Vector2f(Settings.DevTextScale, Settings.DevTextScale);
-            textPlayerPosition.FillColor = Settings.DevTextFillColor;
-            textPlayerPosition.OutlineColor = Settings.DevTextOutlineColor;
-            textPlayerPosition.OutlineThickness = Settings.DevTextThickness;
-            textPlayerPosition.CharacterSize = Settings.DevTextCharacterSize;
-            textPlayerPosition.Position = new Vector2f(Settings.DevTextPositionX, Settings.DevTextPositionY);
-            textPlayerPosition.Font = new Font(Settings.DevTextFontPath);
+            textPlayerPosition.Scale = new Vector2f(Config.DevTextScale, Config.DevTextScale);
+            textPlayerPosition.FillColor = Config.DevTextFillColor;
+            textPlayerPosition.OutlineColor = Config.DevTextOutlineColor;
+            textPlayerPosition.OutlineThickness = Config.DevTextThickness;
+            textPlayerPosition.CharacterSize = Config.DevTextCharacterSize;
+            textPlayerPosition.Position = new Vector2f(Config.DevTextPositionX, Config.DevTextPositionY);
+            textPlayerPosition.Font = new Font(Config.DevTextFontPath);
 
             textPlayerPositionMap = new Text();
-            textPlayerPositionMap.Scale = new Vector2f(Settings.DevTextScale, Settings.DevTextScale);
-            textPlayerPositionMap.FillColor = Settings.DevTextFillColor;
-            textPlayerPositionMap.OutlineColor = Settings.DevTextOutlineColor;
-            textPlayerPositionMap.OutlineThickness = Settings.DevTextThickness;
-            textPlayerPositionMap.CharacterSize = Settings.DevTextCharacterSize;
-            textPlayerPositionMap.Position = new Vector2f(Settings.DevTextPositionMapX, Settings.DevTextPositionMapY);
-            textPlayerPositionMap.Font = new Font(Settings.DevTextFontPath);
+            textPlayerPositionMap.Scale = new Vector2f(Config.DevTextScale, Config.DevTextScale);
+            textPlayerPositionMap.FillColor = Config.DevTextFillColor;
+            textPlayerPositionMap.OutlineColor = Config.DevTextOutlineColor;
+            textPlayerPositionMap.OutlineThickness = Config.DevTextThickness;
+            textPlayerPositionMap.CharacterSize = Config.DevTextCharacterSize;
+            textPlayerPositionMap.Position = new Vector2f(Config.DevTextPositionMapX, Config.DevTextPositionMapY);
+            textPlayerPositionMap.Font = new Font(Config.DevTextFontPath);
 
             textPlayerRotation = new Text();
-            textPlayerRotation.Scale = new Vector2f(Settings.DevTextScale, Settings.DevTextScale);
-            textPlayerRotation.FillColor = Settings.DevTextFillColor;
-            textPlayerRotation.OutlineColor = Settings.DevTextOutlineColor;
-            textPlayerRotation.OutlineThickness = Settings.DevTextThickness;
-            textPlayerRotation.CharacterSize = Settings.DevTextCharacterSize;
-            textPlayerRotation.Position = new Vector2f(Settings.DevTextRotationX, Settings.DevTextRotationY);
-            textPlayerRotation.Font = new Font(Settings.DevTextFontPath);
+            textPlayerRotation.Scale = new Vector2f(Config.DevTextScale, Config.DevTextScale);
+            textPlayerRotation.FillColor = Config.DevTextFillColor;
+            textPlayerRotation.OutlineColor = Config.DevTextOutlineColor;
+            textPlayerRotation.OutlineThickness = Config.DevTextThickness;
+            textPlayerRotation.CharacterSize = Config.DevTextCharacterSize;
+            textPlayerRotation.Position = new Vector2f(Config.DevTextRotationX, Config.DevTextRotationY);
+            textPlayerRotation.Font = new Font(Config.DevTextFontPath);
         }
 
         public void UpdateInfo(int fps, Vector2f pos, Vector2i posMap, float rot)

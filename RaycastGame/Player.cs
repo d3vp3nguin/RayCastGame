@@ -24,6 +24,9 @@ namespace RaycastGame
         private CircleShape playerMapCircle;
 
         private bool isCollisionDetected = false;
+        private bool isPlayerWalk = false;
+        public bool IsCollisionDetected { get { return isCollisionDetected; } }
+        public bool IsPlayerWalk { get { return isPlayerWalk; } }
 
         public Player(Map map)
         {
@@ -34,9 +37,9 @@ namespace RaycastGame
 
             CalculatePositionMapAndCenter();
 
-            playerMapCircle = new CircleShape(Settings.PlayerMapRadius);
-            playerMapCircle.FillColor = Settings.PlayerMapColor;
-            playerMapCircle.Origin = new Vector2f(Settings.PlayerMapRadius, Settings.PlayerMapRadius);
+            playerMapCircle = new CircleShape(Config.PlayerMapRadius);
+            playerMapCircle.FillColor = Config.PlayerMapColor;
+            playerMapCircle.Origin = new Vector2f(Config.PlayerMapRadius, Config.PlayerMapRadius);
         }
 
         public void Update(float deltaTime)
@@ -47,8 +50,8 @@ namespace RaycastGame
 
         private void CalculatePositionMapAndCenter()
         {
-            positionMap = new Vector2i((int)Math.Floor((position.X - Settings.MapOffset.X) / rect.Width), 
-                                       (int)Math.Floor((position.Y - Settings.MapOffset.Y) / rect.Height));
+            positionMap = new Vector2i((int)Math.Floor((position.X - Config.MapOffset.X) / rect.Width), 
+                                       (int)Math.Floor((position.Y - Config.MapOffset.Y) / rect.Height));
         }
 
         private void MovementAndRotation(float deltaTime)
@@ -61,17 +64,22 @@ namespace RaycastGame
             if (Keyboard.IsKeyPressed(Settings.BackwardKey)) deltaPos += new Vector2f(-cos_a, -sin_a);
             if (Keyboard.IsKeyPressed(Settings.LeftKey)) deltaPos += new Vector2f(sin_a, -cos_a);
             if (Keyboard.IsKeyPressed(Settings.RightKey)) deltaPos += new Vector2f(-sin_a, cos_a);
-            
+
             if (MyMath.Length(deltaPos) != 0)
-                deltaPos = MyMath.Norm(deltaPos) * Settings.PlayerSpeed * deltaTime;
+            {
+                deltaPos = MyMath.Norm(deltaPos) * Config.PlayerSpeed * deltaTime;
+                isPlayerWalk = true;
+            }
+            else
+                isPlayerWalk = false;
 
             position += deltaPos;
             CheckForCollision();
 
             playerMapCircle.Position = position;
 
-            float dx = Mouse.GetPosition().X - Settings.GameResolution.X / 2;
-            Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
+            float dx = Mouse.GetPosition().X - Config.GameResolution.X / 2;
+            Mouse.SetPosition(new Vector2i(Config.GameResolution.X / 2, Config.GameResolution.Y / 2));
             angle += dx * Settings.MouseSensativity * deltaTime;
 
             if (angle < 0) angle += (float)Math.Tau;
@@ -89,12 +97,12 @@ namespace RaycastGame
 
         private void CheckForWallCollision(FloatRect rect)
         {
-            Vector2f nearWallPoint = new Vector2f(MyMath.Clamp(position.X, rect.Left - Settings.WallOutlineThickness, rect.Left + rect.Width + Settings.WallOutlineThickness), 
-                                                  MyMath.Clamp(position.Y, rect.Top - Settings.WallOutlineThickness, rect.Top + rect.Height + Settings.WallOutlineThickness));
+            Vector2f nearWallPoint = new Vector2f(MyMath.Clamp(position.X, rect.Left - Config.WallOutlineThickness, rect.Left + rect.Width + Config.WallOutlineThickness), 
+                                                  MyMath.Clamp(position.Y, rect.Top - Config.WallOutlineThickness, rect.Top + rect.Height + Config.WallOutlineThickness));
 
             Vector2f playerToPoint = position - nearWallPoint;
-            if (MyMath.Length(playerToPoint) < Settings.PlayerMapRadius)
-                position = nearWallPoint + MyMath.Norm(playerToPoint) * Settings.PlayerMapRadius;
+            if (MyMath.Length(playerToPoint) < Config.PlayerMapRadius)
+                position = nearWallPoint + MyMath.Norm(playerToPoint) * Config.PlayerMapRadius;
 
             isCollisionDetected = true;
         }

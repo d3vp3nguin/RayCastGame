@@ -6,7 +6,7 @@ namespace RaycastGame
     public class Map : Drawable
     {
         private Vector2i playerStartPosMap = new Vector2i(1, 4);
-        public Vector2f PlayerStartPos { get { return new Vector2f(playerStartPosMap.X * shapeSize.X + shapeSize.X / 2f + Settings.MapOffset.X + Settings.PlayerMapRadius, playerStartPosMap.Y * shapeSize.Y + shapeSize.Y / 2f + Settings.MapOffset.Y + Settings.PlayerMapRadius); } }
+        public Vector2f PlayerStartPos { get { return new Vector2f(playerStartPosMap.X * shapeSize.X + shapeSize.X / 2f + Config.MapOffset.X + Config.PlayerMapRadius, playerStartPosMap.Y * shapeSize.Y + shapeSize.Y / 2f + Config.MapOffset.Y + Config.PlayerMapRadius); } }
 
 
         private float playerStartRotation = 0f;
@@ -47,8 +47,8 @@ namespace RaycastGame
 
         public Map()
         {
-            shapeSize = new Vector2f(Settings.MapSize.X / mapWallBase.GetLength(1) - 2 * Settings.WallOutlineThickness, 
-                                        Settings.MapSize.Y / mapWallBase.GetLength(0) - 2 * Settings.WallOutlineThickness);
+            shapeSize = new Vector2f(Config.MapSize.X / mapWallBase.GetLength(1) - 2 * Config.WallOutlineThickness,
+                                     Config.MapSize.Y / mapWallBase.GetLength(0) - 2 * Config.WallOutlineThickness);
             mapShapes = new RectangleShape[mapWallBase.GetLength(0), mapWallBase.GetLength(1)];
 
             for (int y = 0; y < mapWallBase.GetLength(0); y++)
@@ -56,10 +56,10 @@ namespace RaycastGame
                 for (int x = 0; x < mapWallBase.GetLength(1); x++)
                 {
                     mapShapes[y, x] = new RectangleShape(shapeSize);
-                    mapShapes[y, x].OutlineThickness = Settings.WallOutlineThickness;
-                    mapShapes[y, x].FillColor = mapWallBase[y, x] != 0 ? Settings.WallYesFillColor : Settings.WallNoFillColor;
-                    mapShapes[y, x].OutlineColor = mapWallBase[y, x] != 0 ? Settings.WallYesOutlineColor : Settings.WallNoOutlineColor;
-                    mapShapes[y, x].Position = new Vector2f(x * (shapeSize.X + 2 * Settings.WallOutlineThickness) + Settings.WallOutlineThickness, y * (shapeSize.Y + 2 * Settings.WallOutlineThickness) + Settings.WallOutlineThickness) + Settings.MapOffset;
+                    mapShapes[y, x].OutlineThickness = Config.WallOutlineThickness;
+                    mapShapes[y, x].FillColor = mapWallBase[y, x] != 0 ? Config.WallYesFillColor : Config.WallNoFillColor;
+                    mapShapes[y, x].OutlineColor = mapWallBase[y, x] != 0 ? Config.WallYesOutlineColor : Config.WallNoOutlineColor;
+                    mapShapes[y, x].Position = new Vector2f(x * (shapeSize.X + 2 * Config.WallOutlineThickness) + Config.WallOutlineThickness, y * (shapeSize.Y + 2 * Config.WallOutlineThickness) + Config.WallOutlineThickness) + Config.MapOffset;
                 }
             }
         }
@@ -67,11 +67,11 @@ namespace RaycastGame
         public void Draw(RenderTarget target, RenderStates states)
         {
             foreach (RectangleShape mapShape in mapShapes)
-                if (mapShape.OutlineColor == Settings.WallNoOutlineColor)
+                if (mapShape.OutlineColor == Config.WallNoOutlineColor)
                     target.Draw(mapShape, states);
 
             foreach (RectangleShape mapShape in mapShapes)
-                if (mapShape.OutlineColor == Settings.WallYesOutlineColor)
+                if (mapShape.OutlineColor == Config.WallYesOutlineColor)
                     target.Draw(mapShape, states);
         }
     }

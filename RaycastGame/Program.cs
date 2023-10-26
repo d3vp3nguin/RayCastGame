@@ -18,6 +18,11 @@ namespace RaycastGame
         private static ObjectRenderer objectRenderer;
 
         private static DevInfo gameDevInfo;
+
+        private static Menu menu;
+
+        private static AudioManager audioManager;
+
         private static float deltaTime = 0;
         private static int fps = 0;
 
@@ -29,10 +34,10 @@ namespace RaycastGame
 
         private static void Init()
         {
-            gameWindow = new RenderWindow(new VideoMode((uint)Settings.GameResolution.X, (uint)Settings.GameResolution.Y), Settings.GameTitle, Settings.GameStyle);
+            gameWindow = new RenderWindow(new VideoMode((uint)Config.GameResolution.X, (uint)Config.GameResolution.Y), Config.GameTitle, Config.GameStyle);
             gameWindow.Closed += WindowClose;
 
-            gameView = new View(new FloatRect(0, 0, Settings.GameResolution.X, Settings.GameResolution.Y));
+            gameView = new View(new FloatRect(0, 0, Config.GameResolution.X, Config.GameResolution.Y));
             gameWindow.SetView(gameView);
 
             gameClock = new Clock();
@@ -46,8 +51,12 @@ namespace RaycastGame
 
             gameDevInfo = new DevInfo();
 
+            menu = new Menu(gameWindow, rayCasting, objectRenderer);
+
+            audioManager = new AudioManager(player);
+
             gameWindow.SetMouseCursorVisible(false);
-            Mouse.SetPosition(new Vector2i(Settings.GameResolution.X / 2, Settings.GameResolution.Y / 2));
+            Mouse.SetPosition(new Vector2i(Config.GameResolution.X / 2, Config.GameResolution.Y / 2));
         }
 
         private static void MainCycle()
@@ -59,17 +68,20 @@ namespace RaycastGame
                 gameWindow.DispatchEvents();
                 gameWindow.Clear(Color.Black);
 
-                if (gameWindow.HasFocus())
+                menu.Update();
+                if (gameWindow.HasFocus() && !menu.IsActive)
                 {
                     player.Update(deltaTime);
-                    rayCasting.RayCast();
-                    objectRenderer.Update();
                 }
+                rayCasting.RayCast();
+                objectRenderer.Update();
+                audioManager.Update(deltaTime, gameWindow.HasFocus() && !menu.IsActive);
 
                 gameWindow.Draw(objectRenderer);
                 gameWindow.Draw(map);
                 gameWindow.Draw(player);
                 gameWindow.Draw(rayCasting);
+                if (menu.IsActive) gameWindow.Draw(menu);
 
                 gameDevInfo.UpdateInfo(fps, player.Position, player.PositionMap, player.Angle);
                 gameWindow.Draw(gameDevInfo);

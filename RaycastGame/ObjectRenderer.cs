@@ -28,6 +28,11 @@ namespace RaycastGame
             this.rayCasting = rayCasting;
             this.map = map;
 
+            Init();
+        }
+
+        public void Init()
+        {
             wallRects = new RectangleShape[Settings.RaysCount];
             for (int i = 0; i < wallRects.Length; i++)
             {
@@ -38,20 +43,20 @@ namespace RaycastGame
 
             skyRect = new RectangleShape();
             skyRect.Position = new Vector2f(0, 0);
-            skyRect.Size = new Vector2f(Settings.GameResolution.X, Settings.GameResolution.Y / 2);
+            skyRect.Size = new Vector2f(Config.GameResolution.X, Config.GameResolution.Y / 2);
             skyRect.FillColor = Color.White;
             skyTexture = GetSkyTexture();
             skyTexture.Repeated = true;
             skyRect.Texture = skyTexture;
 
             floorRect = new Vertex[4];
-            floorRect[0] = new Vertex(new Vector2f(0, Settings.GameResolution.Y / 2), Settings.FloorDarkColor);
-            floorRect[1] = new Vertex(new Vector2f(Settings.GameResolution.X, Settings.GameResolution.Y / 2), Settings.FloorDarkColor);
-            floorRect[2] = new Vertex(new Vector2f(Settings.GameResolution.X, Settings.GameResolution.Y), Settings.FloorBrightColor);
-            floorRect[3] = new Vertex(new Vector2f(0, Settings.GameResolution.Y), Settings.FloorBrightColor);
+            floorRect[0] = new Vertex(new Vector2f(0, Config.GameResolution.Y / 2), Config.FloorDarkColor);
+            floorRect[1] = new Vertex(new Vector2f(Config.GameResolution.X, Config.GameResolution.Y / 2), Config.FloorDarkColor);
+            floorRect[2] = new Vertex(new Vector2f(Config.GameResolution.X, Config.GameResolution.Y), Config.FloorBrightColor);
+            floorRect[3] = new Vertex(new Vector2f(0, Config.GameResolution.Y), Config.FloorBrightColor);
 
             probRects = new RectangleShape[map.SpriteObjects.Length];
-            for (int i = 0; i < probRects.Length; i++) 
+            for (int i = 0; i < probRects.Length; i++)
                 probRects[i] = map.SpriteObjects[i].ProbRect;
 
             rects = new List<RectToRender>();
@@ -61,18 +66,17 @@ namespace RaycastGame
         {
             rects.Clear();
 
-            skyRect.TextureRect = new IntRect((int)(player.Angle / (float)Math.Tau * Settings.TextureSkySize.X) - Settings.TextureSkySize.Y / 2, 0, Settings.TextureSkySize.Y, Settings.TextureSkySize.Y);
+            skyRect.TextureRect = new IntRect((int)(player.Angle / (float)Math.Tau * Config.TextureSkySize.X) - Config.TextureSkySize.Y / 2, 0, Config.TextureSkySize.Y, Config.TextureSkySize.Y);
 
             for (int i = 0; i < Settings.RaysCount; i++)
             {
                 wallRects[i].FillColor = rayCasting.RayCastRes.ProjectionColor[i];
                 wallRects[i].Texture = wallTextures[rayCasting.RayCastRes.NumTexture[i]];
-                wallRects[i].Position = new Vector2f(i * Settings.WallScale, Settings.GameResolution.Y / 2 - rayCasting.RayCastRes.ProjectionHeights[i] / 2);
-                wallRects[i].Size = new Vector2f(Settings.WallScale, rayCasting.RayCastRes.ProjectionHeights[i]);
-                wallRects[i].TextureRect = new IntRect((int)Math.Round(rayCasting.RayCastRes.Offset[i] * (Settings.TextureWallSize.X - Settings.WallScale)), 0, (int)Settings.WallScale, Settings.TextureWallSize.X);
+                wallRects[i].Position = new Vector2f(i * Config.WallScale, Config.GameResolution.Y / 2 - rayCasting.RayCastRes.ProjectionHeights[i] / 2);
+                wallRects[i].Size = new Vector2f(Config.WallScale, rayCasting.RayCastRes.ProjectionHeights[i]);
+                wallRects[i].TextureRect = new IntRect((int)Math.Round(rayCasting.RayCastRes.Offset[i] * (Config.TextureWallSize.X - Config.WallScale)), 0, (int)Config.WallScale, Config.TextureWallSize.X);
                 rects.Add(new RectToRender(wallRects[i], rayCasting.RayCastRes.Depth[i]));
             }
-
             for (int i = 0; i < probRects.Length; i++)
             {
                 map.SpriteObjects[i].Update(player, map);
@@ -86,15 +90,15 @@ namespace RaycastGame
 
         private Texture[] GetWallTextures()
         {
-            Texture[] textures = new Texture[Settings.WallTextureNumber];
-            for (int i = 1; i <= Settings.WallTextureNumber; i++)
-                textures[i - 1] = new Texture(Settings.TextureWallPath + i.ToString() + ".png");
+            Texture[] textures = new Texture[Config.WallTextureNumber];
+            for (int i = 1; i <= Config.WallTextureNumber; i++)
+                textures[i - 1] = new Texture(Config.TextureWallPath + i.ToString() + ".png");
             return textures;
         }
 
         private Texture GetSkyTexture()
         {
-            Texture texture = new Texture(Settings.TextureSkyPath);
+            Texture texture = new Texture(Config.TextureSkyPath);
             return texture;
         }
 
