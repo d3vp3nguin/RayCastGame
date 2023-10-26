@@ -71,6 +71,12 @@ namespace RaycastGame
         public static Color PlayerLineMapColor { get { return playerLineMapColor; } }
 
 
+        private static float mouseMinSensativity = 0.01f;
+        private static float mouseMaxSensativity = 3f;
+        public static float MouseMinSensativity { get { return mouseMinSensativity; } }
+        public static float MouseMaxSensativity { get { return mouseMaxSensativity; } }
+
+
         // RAYCAST CONFIG
         private static float fov = (float)Math.PI / 3f;
         private static float fovHalf = fov / 2;
@@ -150,6 +156,12 @@ namespace RaycastGame
         public static float StepTime { get { return stepTime; } }
 
 
+        private static float minVolume = 0f;
+        private static float maxVolume = 100f;
+        public static float MinVolume { get { return minVolume; } }
+        public static float MaxVolume { get { return maxVolume; } }
+
+
         // DEV INFO CONFIG
         private static float devTextScale = 1f;
         public static float DevTextScale { get { return devTextScale; } }
@@ -202,16 +214,16 @@ namespace RaycastGame
         public static Vector2f MenuSize { get { return menuSize; } }
 
 
-        private static Color menuBaseColor = new Color(33, 33, 33, 192);
-        private static Color menuParamColor = new Color(22, 22, 22, 192);
-        private static Color menuButtonOffColor = new Color(33, 33, 33, 192);
+        private static Vector2f menuOffset = new Vector2f(20f, 20f);
+        public static Vector2f MenuOffset { get { return menuOffset; } }
+
+
+        private static Color menuBackgroundColor = new Color(33, 33, 33, 192);
+        private static Color menuButtonOffColor = new Color(22, 22, 22, 192);
         private static Color menuButtonOnColor = new Color(55, 55, 55, 192);
-        private static Color menuTransparentColor = new Color(0, 0, 0, 0);
-        public static Color MenuBaseColor { get { return menuBaseColor; } }
-        public static Color MenuParamColor { get { return menuParamColor; } }
+        public static Color MenuBackgroundColor { get { return menuBackgroundColor; } }
         public static Color MenuButtonOffColor { get { return menuButtonOffColor; } }
         public static Color MenuButtonOnColor { get { return menuButtonOnColor; } }
-        public static Color MenuTransparentColor { get { return menuTransparentColor; } }
 
 
         private static float menuTextScale = 1f;
@@ -234,69 +246,5 @@ namespace RaycastGame
 
         private static string menuTextFontPath = "Assets\\Fonts\\2a031.ttf";
         public static string MenuTextFontPath { get { return menuTextFontPath; } }
-
-
-        private static string[] nameOfSettings = { "Rays Count", "Mouse Sensativity", "Walk Buttons", "Volume", "" };
-        public static string[] NameOfSettings { get { return nameOfSettings; } }
-
-
-        private static int numberOfSettings = nameOfSettings.Length;
-        public static int NumberOfSettings { get { return numberOfSettings; } }
-
-
-        private static string[][] nameOfStatesSettings = { new string[] { "X / 1", "X / 2", "X / 4", "X / 5" }, new string[] { "" }, new string[] { "WASD", "Arrows" }, new string[] { "" }, new string[] { "Quit" } };
-        public static string[][] NameOfStatesSettings { get { return nameOfStatesSettings; } }
-
-
-        private static int[] numberOfStatesSettings = { 4, 1, 2, 1, 1 };
-        public static int[] NumberOfStatesSettings { get { return numberOfStatesSettings; } }
-
-
-        private static bool[] isAllButtonSettings = { false, false, false, false, true };
-        public static bool[] IsAllButtonSettings { get { return isAllButtonSettings; } }
-
-
-        private static bool[] isButtonSettings = { true, false, true, false, true };
-        public static bool[] IsButtonSettings { get { return isButtonSettings; } }
-
-
-        private static bool[] isScrollerSettings = { false, true, false, true, false };
-        public static bool[] IsScrollerSettings { get { return isScrollerSettings; } }
-
-
-        private static float menuParamOffset = 20f;
-        public static float MenuParamOffset { get { return menuParamOffset; } }
-
-
-        private static int[] rayCountParam = { gameResolution.X / 1, gameResolution.X / 2, gameResolution.X / 4, gameResolution.X / 5, };
-        public static int[] RayCountParam { get { return rayCountParam; } }
-
-
-        private static Keyboard.Key[] keyForwardParam = { Keyboard.Key.W, Keyboard.Key.Up };
-        public static Keyboard.Key[] KeyForwardParam { get { return keyForwardParam; } }
-
-
-        private static float minMouseSensativity = 0.001f;
-        private static float maxMouseSensativity = 5f;
-        public static float MinMouseSensativity { get { return minMouseSensativity; } }
-        public static float MaxMouseSensativity { get { return maxMouseSensativity; } }
-
-
-        private static float minVolume = 0f;
-        private static float maxVolume = 100f;
-        public static float MinVolume { get { return minVolume; } }
-        public static float MaxVolume { get { return maxVolume; } }
-
-
-        private static float[] scrollerSettings = { 0f, Settings.MouseSensativity, 0f, Settings.Volume, 0f };
-        public static float[] ScrollerSettings { get { return scrollerSettings; } }
-
-
-        private static float[] scrollerMinSettings = { 0f, minMouseSensativity, 0f, minVolume, 0f };
-        public static float[] ScrollerMinSettings { get { return scrollerMinSettings; } }
-
-
-        private static float[] scrollerMaxSettings = { 0f, maxMouseSensativity, 0f, maxVolume, 0f };
-        public static float[] ScrollerMaxSettings { get { return scrollerMaxSettings; } }
     }
 }
