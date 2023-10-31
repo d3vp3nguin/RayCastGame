@@ -60,12 +60,12 @@ namespace RaycastGame
             if (!isOnScreen) return;
 
             FloatRect rect = map.MapShapes[0, 0].GetGlobalBounds();
-            float proj = Config.ScreenDistance / depth / rect.Width * Config.ProbeScale;
+            float proj = Config.ScreenDistance / depth * Config.ProbeScale[numberProb];
             Vector2f projSize = new Vector2f(proj * probTextureRatio, proj);
 
             probRect.Size = projSize;
             probRect.Origin = new Vector2f(projSize.X / 2, projSize.Y);
-            probRect.Position = new Vector2f(screenX, Config.GameResolution.Y / 2 + projSize.Y);
+            probRect.Position = new Vector2f(screenX, Config.GameResolution.Y / 2 + projSize.Y * Config.ProbeOffsetY[numberProb]);
         }
 
         private Texture GetProbTexture()

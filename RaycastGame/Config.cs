@@ -141,8 +141,11 @@ namespace RaycastGame
         public static string TextureProbPath { get { return textureProbPath; } }
 
 
-        private static float probeScale = 500f;
-        public static float ProbeScale { get { return probeScale; } }
+        private static float[] probeScale = { 20f, 20f, 14f };
+        public static float[] ProbeScale { get { return probeScale; } }
+
+        private static float[] probeOffsetY = { 1f, 0.9f, 1.4f };
+        public static float[] ProbeOffsetY { get { return probeOffsetY; } }
 
 
         // AUDIO CONFIG

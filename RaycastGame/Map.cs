@@ -13,17 +13,17 @@ namespace RaycastGame
         public float PlayerStartRotation { get { return playerStartRotation; } }
 
 
-        private SpriteObject[] spriteObjects = { new SpriteObject(1, new Vector2f(46f, 46f)),
-                                                 new SpriteObject(1, new Vector2f(46f, 244f)),
-                                                 new SpriteObject(2, new Vector2f(184f, 160f)),
-                                                 new SpriteObject(3, new Vector2f(136f, 244f)),
-                                                 new SpriteObject(1, new Vector2f(166f, 90f)),
-                                                 new SpriteObject(3, new Vector2f(220f, 124f)),
-                                                 new SpriteObject(2, new Vector2f(304f, 46f)),
-                                                 new SpriteObject(3, new Vector2f(286f, 180f)),
-                                                 new SpriteObject(1, new Vector2f(364f, 244f)),
-                                                 new SpriteObject(2, new Vector2f(454f, 46f)),
-                                                 new SpriteObject(1, new Vector2f(454f, 244f))};
+        private SpriteObject[] spriteObjects = { new SpriteObject(0, new Vector2f(46f, 46f)),
+                                                 new SpriteObject(0, new Vector2f(46f, 244f)),
+                                                 new SpriteObject(1, new Vector2f(184f, 160f)),
+                                                 new SpriteObject(2, new Vector2f(136f, 244f)),
+                                                 new SpriteObject(0, new Vector2f(166f, 90f)),
+                                                 new SpriteObject(2, new Vector2f(220f, 124f)),
+                                                 new SpriteObject(1, new Vector2f(304f, 46f)),
+                                                 new SpriteObject(2, new Vector2f(286f, 180f)),
+                                                 new SpriteObject(0, new Vector2f(364f, 244f)),
+                                                 new SpriteObject(1, new Vector2f(454f, 46f)),
+                                                 new SpriteObject(0, new Vector2f(454f, 244f))};
         public SpriteObject[] SpriteObjects { get { return spriteObjects; } }
 
 
