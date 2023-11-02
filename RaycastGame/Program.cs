@@ -19,9 +19,9 @@ namespace RaycastGame
 
         private static DevInfo gameDevInfo;
 
-        private static Menu menu;
-
         private static AudioManager audioManager;
+
+        private static Menu menu;
 
         private static float deltaTime = 0;
         private static int fps = 0;
@@ -51,9 +51,10 @@ namespace RaycastGame
 
             gameDevInfo = new DevInfo();
 
-            menu = new Menu(gameWindow, rayCasting, objectRenderer);
-
             audioManager = new AudioManager(player);
+            audioManager.ChangeVolume();
+
+            menu = new Menu(gameWindow, rayCasting, objectRenderer, audioManager);
 
             gameWindow.SetMouseCursorVisible(false);
             Mouse.SetPosition(new Vector2i(Config.GameResolution.X / 2, Config.GameResolution.Y / 2));
@@ -72,10 +73,10 @@ namespace RaycastGame
                 if (gameWindow.HasFocus() && !menu.IsActive)
                 {
                     player.Update(deltaTime);
+                    audioManager.Update(deltaTime);
                 }
                 rayCasting.RayCast();
                 objectRenderer.Update();
-                audioManager.Update(deltaTime, gameWindow.HasFocus() && !menu.IsActive);
 
                 gameWindow.Draw(objectRenderer);
                 gameWindow.Draw(map);

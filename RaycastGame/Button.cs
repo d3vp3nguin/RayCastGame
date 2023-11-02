@@ -4,16 +4,13 @@ using SFML.Window;
 
 namespace RaycastGame
 {
-    public class Button : Label
+    public class Button : UIelement
     {
-        private int idButton = -1;
-        public int ID { get { return idButton; } }
-
         private bool isPressedLKM = false;
 
-        public Button(Vector2f size, Vector2f position, Color fillColorBack, Color fillColorFront, string displayedString, int idButton) : base(size, position, fillColorBack, fillColorFront, displayedString)
+        public Button(Vector2f size, Vector2f position, Color fillColorBack, Color fillColorFront, string displayedString, int id) : base(size, position, fillColorBack, fillColorFront, displayedString, id)
         {
-            this.idButton = idButton;
+            
         }
 
         public bool IsPressed()

@@ -4,24 +4,40 @@ using SFML.Window;
 
 namespace RaycastGame
 {
-    public class Scroller : Label
+    public class Scroller : UIelement
     {
-        private int idScroller = -1;
-        public int ID { get { return idScroller; } }
-
         private float value = 0f;
         private float valueMin = 0f;
         private float valueMax = 0f;
 
-        public Scroller(Vector2f size, Vector2f position, Color fillColorBack, Color fillColorFront, string displayedString, int idScroller, float value, float valueMin, float valueMax) : base(size, position, fillColorBack, fillColorFront, displayedString)
+        public float Value { get { return value; } }
+
+
+        public Scroller(Vector2f size, Vector2f position, Color fillColorBack, Color fillColorFront, string displayedString, float value, float valueMin, float valueMax, int id) : base(size, position, fillColorBack, fillColorFront, displayedString, id)
         {
-            this.idScroller = idScroller;
             this.value = value;
             this.valueMin = valueMin;
             this.valueMax = valueMax;
         }
 
-        private bool IsScrolled()
+        public float GetScrollFullValue() 
+        {
+            return GetScrollValue() * (valueMax - valueMin) + valueMin;
+        }
+
+        public float GetScrollValue()
+        {
+            RecalcForeground(value);
+
+            if (!IsScrolled()) return value; 
+
+            Vector2i mousePos = Mouse.GetPosition();
+            FloatRect scroller = base.background.GetGlobalBounds();
+            value = MyMath.Clamp((mousePos.X - scroller.Left) / scroller.Width, 0f, 1f);
+            return value;
+        }
+
+        public bool IsScrolled()
         {
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
@@ -33,27 +49,6 @@ namespace RaycastGame
                 return true;
             }
             else return false;
-        }
-
-        public float GetScrollValue()
-        {
-            if (!IsScrolled()) 
-            {
-                RecalcForeground(value);
-                return value; 
-            }
-
-            Vector2i mousePos = Mouse.GetPosition();
-            FloatRect scroller = base.background.GetGlobalBounds();
-
-            value = MyMath.Clamp((mousePos.X - scroller.Left) / scroller.Width, 0f, 1f);
-            RecalcForeground(value);
-            return value;
-        }
-
-        public float GetScrollFullValue() 
-        {
-            return GetScrollValue() * (valueMax - valueMin) + valueMin;
         }
     }
 }

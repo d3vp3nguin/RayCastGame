@@ -24,14 +24,12 @@ namespace RaycastGame
             stepSound = new Sound(stepSoundBuffer);
         }
 
-        public void Update(float deltaTime, bool isActive)
+        public void Update(float deltaTime)
         {
             if (stepTimer > 0) stepTimer-=deltaTime;
             else stepTimer=0;
 
-            ChangeVolume();
-
-            if (player.IsPlayerWalk && stepTimer <= 0 && isActive)
+            if (player.IsPlayerWalk && stepTimer <= 0)
             {
                 stepSound.Play();
                 stepTimer = Config.StepTime;

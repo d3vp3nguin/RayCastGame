@@ -13,9 +13,12 @@ namespace RaycastGame
         public RectangleShape foreground { get { return _foreground; } set { _foreground = value; } }
         public Text text { get { return _text; } set { _text = value; } }
 
+        private int id = -1;
+        public int ID { get { return id; } }
+
         private float _width = 0f;
 
-        public UIelement(Vector2f size, Vector2f position, Color fillColorBack, Color fillColorFront, string displayedString)
+        public UIelement(Vector2f size, Vector2f position, Color fillColorBack, Color fillColorFront, string displayedString, int id)
         {
             _background = new RectangleShape();
             _background.Size = size;
@@ -35,8 +38,10 @@ namespace RaycastGame
             _text.FillColor = Config.MenuTextFillColor;
             _text.OutlineColor = Config.MenuTextOutlineColor;
             _text.OutlineThickness = Config.MenuTextThickness;
-            _text.Origin = new Vector2f(text.GetGlobalBounds().Width / 2, text.GetGlobalBounds().Height / 2);
+            _text.Origin = new Vector2f(text.GetGlobalBounds().Width / 2, text.GetGlobalBounds().Height);
             _text.Position = position;
+
+            this.id = id;
 
             _width = size.X;
         }
@@ -49,6 +54,11 @@ namespace RaycastGame
         public void ChangeForegroundColor(Color color)
         {
             _foreground.FillColor = color;
+        }
+
+        public void UpdateText(string displayedString)
+        {
+            text.DisplayedString = displayedString;
         }
 
         public void Draw(RenderTarget target, RenderStates states)
